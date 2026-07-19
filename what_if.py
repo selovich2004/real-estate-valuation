@@ -1,43 +1,17 @@
-# what_if.py
-# -----------------------------------------------------------
-# KORAK 6: Predikcija cijene SA intervalom + "what-if" simulacija
-#
-# Ovaj fajl radi dvije povezane stvari:
-#
-#   1. predvidi_cijenu_sa_intervalom() - vraća ne samo jednu cijenu, nego i
-#      opseg (interval) u kome se stvarna cijena najvjerovatnije nalazi.
-#      Interval računamo na osnovu RMSE modela (izračunatog u koraku 3):
-#      ako model u prosjeku griješi +/- RMSE dolara, kažemo da je stvarna
-#      cijena vjerovatno u opsegu [predikcija - 1.96*RMSE, predikcija + 1.96*RMSE]
-#      (1.96 je standardna vrijednost za priblizno 95% interval poverenja,
-#      uz pretpostavku da su greške modela približno normalno raspoređene).
-#
-#   2. simuliraj_izmjenu() - uzima postojeću nekretninu, mijenja JEDNU ili
-#      više karakteristika (npr. "dodaj kupatilo", "renoviraj", "poveća
-#      garažu", "promijeni površinu") i pokazuje kako se procijenjena
-#      cijena mijenja - prije/poslije, u dolarima i procentima.
-# -----------------------------------------------------------
-
 import joblib
 
 from data_prep import ucitaj_podatke, pripremi_jednu_nekretninu
 
 PUTANJA_NAPREDNI = "models/advanced_model.pkl"
-
 RMSE_NAPREDNOG_MODELA = 29511
 
 
 def predvidi_cijenu(model, df, nekretnina):
-    """Vraća samo predviđenu (tačku) cijenu za jednu nekretninu."""
     _, X_nova = pripremi_jednu_nekretninu(df, nekretnina)
     return model.predict(X_nova)[0]
 
 
 def predvidi_cijenu_sa_intervalom(model, df, nekretnina, nivo_pouzdanosti=1.96):
-    """
-    Vraća predikciju I interval (donja i gornja granica) u kome se
-    stvarna cijena najvjerovatnije nalazi.
-    """
     predikcija = predvidi_cijenu(model, df, nekretnina)
     opseg = nivo_pouzdanosti * RMSE_NAPREDNOG_MODELA
 
@@ -49,10 +23,6 @@ def predvidi_cijenu_sa_intervalom(model, df, nekretnina, nivo_pouzdanosti=1.96):
 
 
 def simuliraj_izmjenu(model, df, polazna_nekretnina, izmjene):
-    """
-    Pokazuje kako se cijena mijenja kada primijenimo izmjene na postojeću
-    nekretninu (what-if simulacija).
-    """
     nova_nekretnina = {**polazna_nekretnina, **izmjene}
 
     cijena_prije = predvidi_cijenu(model, df, polazna_nekretnina)

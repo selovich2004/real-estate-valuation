@@ -1,14 +1,3 @@
-# app.py
-# -----------------------------------------------------------
-# KORACI 7-9: Kompletna Streamlit aplikacija za procjenu vrijednosti nekretnina
-#
-# Ovaj fajl spaja sve prethodne korake u jednu web aplikaciju:
-#   - forma za unos karakteristika i predikcija cijene sa intervalom (korak 7)
-#   - slicne vec prodate nekretnine (KNN), feature importance, what-if
-#     simulator i poredjenje modela (korak 9 - finalno spajanje)
-#   - upload CSV/Excel fajla i dashboard (korak 8)
-# -----------------------------------------------------------
-
 import joblib
 import pandas as pd
 import plotly.express as px
@@ -30,7 +19,7 @@ st.set_page_config(page_title="Procjena vrijednosti nekretnina", page_icon="🏠
 
 PUTANJA_NAPREDNI = "models/advanced_model.pkl"
 PUTANJA_BASELINE = "models/baseline_model.pkl"
-SQFT_U_M2 = 0.092903  # 1 kvadratna stopa = 0.092903 kvadratna metra
+SQFT_U_M2 = 0.092903
 
 
 @st.cache_data
@@ -58,11 +47,6 @@ _, X_test, _, y_test = podijeli_podatke(X, y)
 
 st.title("🏠 Procjena vrijednosti stambenih nekretnina")
 st.caption("Ames Housing dataset - Linear Regression & XGBoost")
-
-
-# -----------------------------------------------------------
-# KORAK 7: Forma za unos karakteristika
-# -----------------------------------------------------------
 
 st.header("Unesi karakteristike nekretnine")
 
@@ -116,10 +100,6 @@ if st.button("Procijeni cijenu", type="primary"):
     st.dataframe(slicne, use_container_width=True)
 
 
-# -----------------------------------------------------------
-# KORAK 9: Feature importance - koji atributi uticu na cijenu
-# -----------------------------------------------------------
-
 st.markdown("---")
 st.header("Koji atributi uticu na cijenu")
 
@@ -141,10 +121,6 @@ with kol_imp2:
     st.dataframe(koeficijenti, use_container_width=True)
     st.caption("Pozitivna vrijednost = povecava cijenu, negativna = smanjuje cijenu (po jedinici)")
 
-
-# -----------------------------------------------------------
-# KORAK 9: What-if simulator
-# -----------------------------------------------------------
 
 st.markdown("---")
 st.header("What-if simulator")
@@ -189,10 +165,6 @@ kol_r2.metric(
 kol_r3.metric("Promjena", f"{rezultat_whatif['razlika_procenat']:+.1f}%")
 
 
-# -----------------------------------------------------------
-# KORAK 9: Poredjenje Linear Regression vs XGBoost
-# -----------------------------------------------------------
-
 st.markdown("---")
 st.header("Poredjenje modela")
 
@@ -202,10 +174,6 @@ metrike_napredni = evaluiraj_model(model, X_test, y_test, naziv="XGBoost")
 poredjenje = pd.DataFrame({"Linear Regression": metrike_baseline, "XGBoost": metrike_napredni})
 st.dataframe(poredjenje, use_container_width=True)
 
-
-# -----------------------------------------------------------
-# KORAK 8: Upload CSV/Excel fajla sa vise nekretnina + dashboard
-# -----------------------------------------------------------
 
 st.markdown("---")
 st.header("Ucitaj vise nekretnina odjednom (CSV ili Excel)")

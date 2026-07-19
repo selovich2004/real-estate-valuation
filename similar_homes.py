@@ -1,14 +1,3 @@
-# similar_homes.py
-# -----------------------------------------------------------
-# KORAK 4: KNN - pronalaženje najsličnijih nekretnina
-#
-# KNN (K-Nearest Neighbors) ne "uči" formulu kao Linear Regression ili
-# XGBoost - on samo mjeri koliko je nova nekretnina "blizu" (po
-# karakteristikama) svakoj od postojećih, i vrati K najbližih.
-# Koristimo ga da korisniku pokažemo: "evo pet stvarno prodatih nekretnina
-# najsličnijih tvojoj" - korisno za provjeru da li je procjena realna.
-# -----------------------------------------------------------
-
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import StandardScaler
 
@@ -21,18 +10,6 @@ KOLONE_ZA_PRIKAZ = [
 
 
 def pronadji_slicne_nekretnine(df, nova_nekretnina, k=5):
-    """
-    Pronalazi K najsličnijih već prodatih nekretnina novoj nekretnini.
-
-    Koraci:
-      1. Sve karakteristike (postojeće + nova) pretvorimo u brojeve
-      2. Skaliramo ih (StandardScaler) - bez ovoga bi npr. površina
-         (brojevi u hiljadama) potpuno nadjačala kvalitet_stanje (1-10)
-         u računanju udaljenosti, iako obje karakteristike treba da imaju
-         priblizno podjednak uticaj
-      3. NearestNeighbors nađe K postojećih nekretnina najbliže novoj
-         (euklidsko rastojanje u prostoru skaliranih karakteristika)
-    """
     X_postojece, X_nova = pripremi_jednu_nekretninu(df, nova_nekretnina)
 
     scaler = StandardScaler()

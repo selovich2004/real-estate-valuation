@@ -1,14 +1,3 @@
-# train_advanced.py
-# -----------------------------------------------------------
-# KORAK 3: Treniranje naprednog modela (XGBoost) i poređenje sa baseline-om
-#
-# XGBoost (Extreme Gradient Boosting) je model sastavljen od MNOGO malih
-# odlučujućih stabala (decision trees) koja se treniraju jedno za drugim -
-# svako sledeće stablo pokušava da ispravi greške prethodnih. Zato obično
-# bolje "hvata" složene, nelinearne veze u podacima nego Linear Regression
-# (koja može da nacrta samo pravu liniju/ravan).
-# -----------------------------------------------------------
-
 import os
 import joblib
 import pandas as pd
@@ -21,15 +10,6 @@ PUTANJA_MODELA = "models/advanced_model.pkl"
 
 
 def treniraj_napredni_model(X_train, y_train):
-    """
-    Trenira XGBoost model.
-
-    Parametri:
-      - n_estimators=300   -> koliko stabala model pravi (jedno za drugim)
-      - max_depth=4         -> koliko je svako stablo "duboko" (sprječava overfitting)
-      - learning_rate=0.05  -> koliko brzo model uči (manje = sporije, ali stabilnije)
-      - random_state=42     -> da rezultat uvijek bude isti kad ponovo pokrenemo kod
-    """
     model = XGBRegressor(
         n_estimators=300,
         max_depth=4,
@@ -52,7 +32,6 @@ if __name__ == "__main__":
     joblib.dump(model, PUTANJA_MODELA)
     print(f"\nModel sacuvan u: {PUTANJA_MODELA}")
 
-    # --- Poredjenje sa baseline modelom ---
     baseline_model = joblib.load(PUTANJA_BASELINE)
     metrike_baseline = evaluiraj_model(baseline_model, X_test, y_test, naziv="Linear Regression (baseline)")
 
@@ -65,6 +44,6 @@ if __name__ == "__main__":
     print(poredjenje)
 
     if metrike_napredni["R2"] > metrike_baseline["R2"]:
-        print("\nZakljucak: XGBoost bolje objasnjava varijaciju cijena (visi R2).")
+        print("\nXGBoost bolje objasnjava varijaciju cijena (visi R2).")
     else:
-        print("\nZakljucak: Linear Regression je uporediv ili bolji od XGBoost-a na ovom datasetu.")
+        print("\nLinear Regression je uporediv ili bolji od XGBoost-a na ovom datasetu.")
